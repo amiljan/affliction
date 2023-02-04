@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: lightgray;
+      }
+    </style>
+  </head>
+  <body>
+    <table id="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Sickend</th>
+          <th>Stupified</th>
+          <th>Enfeebled</th>
+          <th>Dizzy</th>
+          <th>Disoriented</th>
+          <th>Impaired</th>
+          <th>Rot</th>
+          <th>Mental Block</th>
+          <th>Bleeding</th>
+          <th>Penance</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+      </tbody>
+    </table>
+    <script>
+      fetch('party.json')
+        .then(response => response.json())
+        .then(data => {
+          const tableBody = document.getElementById('table-body');
+          
+          Object.entries(data).forEach(([name, stats]) => {
+            const row = document.createElement('tr');
+            const nameCell = document.createElement('td');
+            nameCell.textContent = name;
+            row.appendChild(nameCell);
+            
+            Object.values(stats).forEach(stat => {
+              const statCell = document.createElement('td');
+              statCell.textContent = stat;
+              row.appendChild(statCell);
+            });
+            
+            tableBody.appendChild(row);
+          });
+        })
+        .catch(error => console.error(error));
+    </script>
+  </body>
+</html>
