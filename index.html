@@ -1,26 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
-window.onload = function() {
-  fetch("https://raw.githubusercontent.com/amiljan/affliction/master/party.json")
-    .then(response => response.json())
-    .then(data => {
-      let table = "<table><tr><th>Character</th><th>Affliction</th><th>Value</th><th>Effect</th></tr>";
-      for (const character in data) {
-        for (const affliction in data[character]) {
-          table += "<tr>";
-          table += "<td>" + character + "</td>";
-          table += "<td>" + affliction + "</td>";
-          table += "<td>" + data[character][affliction].value + "</td>";
-          table += "<td>" + data[character][affliction].effect + "</td>";
-          table += "</tr>";
-        }
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+    }
+  </style>
+  <script>
+    function loadData() {
+      fetch("https://raw.githubusercontent.com/amiljan/affliction/master/party.json")
+        .then(response => response.json())
+        .then(data => {
+          let characters = [];
+          let table = "<select id='characterSelect' onchange='filter()'><option value=''>All</option>";
+          for (const character in data) {
+            characters.push(character);
+            table += "<option value='" + character + "'>" + character + "</option>";
+          }
+          table += "</select>";
+          table += "<table id='dataTable'><tr><th>Character</th><th>Affliction</th><th>Value</th><th>Effect</th></tr>";
+          for (const character of characters) {
+            for (const affliction in data[character]) {
+              table += "<tr class='" + character + "'>";
+              table += "<td>" + character + "</td>";
+              table += "<td>" + affliction + "</td>";
+              table += "<td>" + data[character][affliction].value + "</td>";
+              table += "<td>" + data[character][affliction].effect + "</td>";
+              table += "</tr>";
+            }
+          }
+          table += "</table>";
+          document.getElementById("table").innerHTML = table;
+        });
+    }
+    function filter() {
+  let characterSelect = document.getElementById("characterSelect");
+  let selectedCharacter = characterSelect.options[characterSelect.selectedIndex].value;
+  let rows = document.querySelectorAll("#dataTable tr");
+  for (const row of rows) {
+    if (selectedCharacter === "") {
+      row.style.display = "";
+    } else if (row.classList.contains(selectedCharacter)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  }
+}
+
+let lastModified = 0;
+function checkData() {
+  fetch("https://raw.githubusercontent.com/amiljan/affliction/master/party.json", { method: "HEAD" })
+    .then(response => {
+      let currentModified = new Date(response.headers.get("last-modified")).getTime();
+      if (currentModified > lastModified) {
+        lastModified = currentModified;
+        loadData();
       }
-      table += "</table>";
-      document.getElementById("table").innerHTML = table;
     });
-};
+}
+setInterval(checkData, 5000);
+loadData();
 </script>
 </head>
 <body>
