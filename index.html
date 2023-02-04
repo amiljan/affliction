@@ -1,34 +1,80 @@
 <html>
   <head>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+
+      .red {
+        background-color: #ff6666;
+      }
+      .yellow {
+        background-color: #ffff66;
+      }
+      .green {
+        background-color: #66ff66;
+      }
+    </style>
+  </head>
+  <body>
     <script>
-      function loadJSON() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "https://raw.githubusercontent.com/amiljan/affliction/master/party.json", true);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            var data = JSON.parse(xhr.responseText);
-            createTable(data);
+      function loadJSON(callback) {
+        var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open("GET", "https://raw.githubusercontent.com/amiljan/affliction/master/party.json", true);
+        xobj.onreadystatechange = function() {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            callback(xobj.responseText);
           }
         };
-        xhr.send();
+        xobj.send(null);
       }
 
-      function createTable(data) {
+      function createTable(name, data) {
         var table = document.createElement("table");
-        var headerRow = document.createElement("tr");
-        headerRow.innerHTML = "<th>Name</th><th>Sickend</th><th>Stupified</th><th>Enfeebled</th><th>Dizzy</th><th>Disoriented</th><th>Impaired</th><th>Rot</th><th>Mental Block</th><th>Bleeding</th><th>Penance</th>";
-        table.appendChild(headerRow);
+        var headerRow = table.insertRow();
+        headerRow.insertCell().innerHTML = "Status";
+        headerRow.insertCell().innerHTML = "Value";
 
-        for (var name in data) {
-          var row = document.createElement("tr");
-          row.innerHTML = "<td>" + name + "</td><td>" + data[name].sickend + "</td><td>" + data[name].stupified + "</td><td>" + data[name].enfeebled + "</td><td>" + data[name].dizzy + "</td><td>" + data[name].disoriented + "</td><td>" + data[name].impaired + "</td><td>" + data[name].rot + "</td><td>" + data[name].mental_block + "</td><td>" + data[name].bleeding + "</td><td>" + data[name].penance + "</td>";
-          table.appendChild(row);
+        for (var key in data) {
+          var row = table.insertRow();
+          var statusCell = row.insertCell();
+          statusCell.innerHTML = key;
+
+          var valueCell = row.insertCell();
+          valueCell.innerHTML = data[key];
+
+          if (data[key] == 0) {
+            row.classList.add("green");
+          } else if (data[key] > 0 && data[key] < 5) {
+            row.classList.add("yellow");
+          } else {
+            row.classList.add("red");
+          }
         }
 
+        var heading = document.createElement("h2");
+        heading.innerHTML = name;
+
+        document.body.appendChild(heading);
         document.body.appendChild(table);
       }
+
+      loadJSON(function(response) {
+        var data = JSON.parse(response);
+        for (var name in data) {
+          createTable(name, data[name]);
+        }
+      });
     </script>
-  </head>
-  <body onload="loadJSON()">
   </body>
 </html>
