@@ -39,16 +39,16 @@ def git_push():
 def generate_json(characters):
     for i in characters:
         party[i.name] = {
-            "sickend" : {"value":i.sickend,"effect":f"-{i.sickend} to STR, DEX and CON saves"},
-            "stupified" : {"value":i.stupified,"effect":f"-{i.stupified} to INT, WIS and CHA saves"},
-            "enfeebled" : {"value":i.enfeebled,"effect":f"{i.enfeebled} rounds disadvantage to STR, DEX and CON saves"},
-            "dizzy" : {"value":i.dizzy,"effect":f"{i.dizzy} rounds disadvantage on INT, WIS and CHA saves"},
-            "disoriented" : {"value":i.disoriented,"effect":f"{i.disoriented} rounds of random movement"},
-            "impaired" : {"value":i.impaired,"effect":f"lose {i.impaired} actions, attacks or max spell levels each turn"},
-            "rot" : {"value":i.rot,"effect":f"deals {i.rot*i.rot} damage at the begining of each turn"},
-            "mental_block" : {"value":i.mental_block,"effect":f"deals {i.mental_block*i.mental_block*2} damage for each hostile action taken"},
-            "bleeding" : {"value":i.bleeding,"effect":f"deals {i.bleeding}d6 damage at the begining of every turn and for every 10ft moved"},
-            "penance" : {"value":i.penance,"effect":f"deals {i.penance*i.penance}d4 damage at the begining of each turn"}
+            "sickend" : {"value":i.sickend['value'],"effect":f"-{i.sickend['value']} to STR, DEX and CON saves"},
+            "stupified" : {"value":i.stupified['value'],"effect":f"-{i.stupified['value']} to INT, WIS and CHA saves"},
+            "enfeebled" : {"value":i.enfeebled['value'],"effect":f"{i.enfeebled['value']} rounds disadvantage to STR, DEX and CON saves"},
+            "dizzy" : {"value":i.dizzy['value'],"effect":f"{i.dizzy['value']} rounds disadvantage on INT, WIS and CHA saves"},
+            "disoriented" : {"value":i.disoriented['value'],"effect":f"{i.disoriented['value']} rounds of random movement"},
+            "impaired" : {"value":i.impaired['value'],"effect":f"lose {i.impaired['value']} actions, attacks or max spell levels each turn"},
+            "rot" : {"value":i.rot['value'],"effect":f"deals {i.rot['value']*i.rot['value']} damage at the begining of each turn"},
+            "mental_block" : {"value":i.mental_block['value'],"effect":f"deals {i.mental_block['value']*i.mental_block['value']*2} damage for each hostile action taken"},
+            "bleeding" : {"value":i.bleeding['value'],"effect":f"deals {i.bleeding['value']}d6 damage at the begining of every turn and for every 10ft moved"},
+            "penance" : {"value":i.penance['value'],"effect":f"deals {i.penance['value']*i.penance['value']}d4 damage at the begining of each turn"}
         }
     with open("party.json","w") as party_json:
         party_json.write(json.dumps(party))
@@ -78,25 +78,25 @@ while True:
     chose_character = input("Character/turn:" )
     if chose_character == "reset":
         for member in new_party:
-            member.penance = 0
-            member.sickend = 0
-            member.enfeebled = 0
-            member.rot = 0
-            member.stupified = 0
-            member.dizzy = 0
-            member.mental_block = 0
-            member.disoriented = 0
-            member.impaired = 0
-            member.bleeding = 0
+            member.penance["value"] = 0
+            member.sickend["value"] = 0
+            member.enfeebled["value"] = 0
+            member.rot["value"] = 0
+            member.stupified["value"] = 0
+            member.dizzy["value"] = 0
+            member.mental_block["value"] = 0
+            member.disoriented["value"] = 0
+            member.impaired["value"] = 0
+            member.bleeding["value"] = 0
         generate_json(characters = new_party)
     elif chose_character == "turn":
         for member in new_party:
-            if member.enfeebled > 0:
-                member.enfeebled -= 1
-            if member.dizzy > 0:
-                member.dizzy -= 1
-            if member.disoriented > 0:
-                member.disoriented -= 1
+            if member.enfeebled["value"] > 0:
+                member.enfeebled["value"] -= 1
+            if member.dizzy["value"] > 0:
+                member.dizzy["value"] -= 1
+            if member.disoriented["value"] > 0:
+                member.disoriented["value"] -= 1
             print(f"{member.name};enfeebled:{member.enfeebled};dizzy:{member.dizzy};disoriented:{member.disoriented}")
         generate_json(characters = new_party)
     for member in new_party:
@@ -114,49 +114,49 @@ while True:
             choice = int(input("1-10: "))
             number = int(input("Amount: "))
             if choice == 1:
-                member.sickend += number
+                member.sickend["value"] += number
                 print(f"{member.name};sickened:{member.sickend}")
             if choice == 2:
-                member.enfeebled += number
+                member.enfeebled["value"] += number
                 print(f"{member.name};enfeebled:{member.enfeebled}")
             if choice == 3:
-                member.rot += number
+                member.rot["value"] += number
                 print(f"{member.name};rot:{member.rot}")
             if choice == 4:
-                member.stupified += number
+                member.stupified["value"] += number
                 print(f"{member.name};stupified:{member.stupified}")
             if choice == 5:
-                member.dizzy += number
+                member.dizzy["value"] += number
                 print(f"{member.name};dizzy:{member.dizzy}")
             if choice == 6:
-                member.mental_block += number
+                member.mental_block["value"] += number
                 print(f"{member.name};mental_block:{member.mental_block}")
             if choice == 7:
-                member.disoriented += number
+                member.disoriented["value"] += number
                 print(f"{member.name};disoriented:{member.disoriented}")
             if choice == 8:
-                member.impaired += number
+                member.impaired["value"] += number
                 print(f"{member.name};impaired:{member.impaired}")
             if choice == 9:
-                member.bleeding += number
+                member.bleeding["value"] += number
                 print(f"{member.name};bleeding:{member.bleeding}")
             if choice == 10:
                 if number > 0:
-                    total_afflictions = member.sickend + member.enfeebled + member.rot + member.stupified + member.dizzy + member.mental_block + member.disoriented + member.impaired + member.bleeding    
-                    member.penance += total_afflictions
-                    member.sickend = 0
-                    member.enfeebled = 0
-                    member.rot = 0
-                    member.stupified = 0
-                    member.dizzy = 0
-                    member.mental_block = 0
-                    member.disoriented = 0
-                    member.impaired = 0
-                    member.bleeding = 0
+                    total_afflictions = member.sickend["value"] + member.enfeebled["value"] + member.rot["value"] + member.stupified["value"] + member.dizzy["value"] + member.mental_block["value"] + member.disoriented["value"] + member.impaired["value"] + member.bleeding["value"]    
+                    member.penance["value"] += total_afflictions
+                    member.sickend["value"] = 0
+                    member.enfeebled["value"] = 0
+                    member.rot["value"] = 0
+                    member.stupified["value"] = 0
+                    member.dizzy["value"] = 0
+                    member.mental_block["value"] = 0
+                    member.disoriented["value"] = 0
+                    member.impaired["value"] = 0
+                    member.bleeding["value"] = 0
                     print(f"{member.name};penance:{member.penance}")
                     print(f"Total afflictions removed: {total_afflictions}")
                 else:
-                    member.penance = int(member.penance / 2)
+                    member.penance = int(member.penance["value"] / 2)
                     print(f"{member.name};penance:{member.penance}")
             generate_json(characters = new_party)
             
