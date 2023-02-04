@@ -50,7 +50,7 @@ def generate_json(characters):
             "bleeding" : {"value":i.bleeding['value'],"effect":f"deals {i.bleeding['value']}d6 damage at the begining of every turn and for every 10ft moved"},
             "penance" : {"value":i.penance['value'],"effect":f"deals {i.penance['value']*i.penance['value']}d4 damage at the begining of each turn"}
         }
-    with open("party.json","w") as party_json:
+    with open("/home/amiljan@reversinglabs.lan/bin/affliction/party.json","w") as party_json:
         party_json.write(json.dumps(party))
     git_push()
 
