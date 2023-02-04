@@ -39,16 +39,16 @@ def git_push():
 def generate_json(characters):
     for i in characters:
         party[i.name] = {
-            "sickend" : i.sickend,
-            "stupified" : i.stupified,
-            "enfeebled" : i.enfeebled,
-            "dizzy" : i.dizzy,
-            "disoriented" : i.disoriented,
-            "impaired" : i.impaired,
-            "rot" : i.rot,
-            "mental_block" : i.mental_block,
-            "bleeding" : i.bleeding,
-            "penance" : i.penance
+            "sickend" : {"value":i.sickend,"effect":f"-{i.sickend} to STR, DEX and CON saves"},
+            "stupified" : {"value":i.stupified,"effect":f"-{i.stupified} to INT, WIS and CHA saves"},
+            "enfeebled" : {"value":i.enfeebled,"effect":f"{i.enfeebled} rounds disadvantage to STR, DEX and CON saves"},
+            "dizzy" : {"value":i.dizzy,"effect":f"{i.dizzy} rounds disadvantage on INT, WIS and CHA saves"},
+            "disoriented" : {"value":i.disoriented,"effect":f"{i.disoriented} rounds of random movement"},
+            "impaired" : {"value":i.impaired,"effect":f"lose {i.impaired} actions, attacks or max spell levels each turn"},
+            "rot" : {"value":i.rot,"effect":f"deals {i.rot*i.rot} damage at the begining of each turn"},
+            "mental_block" : {"value":i.mental_block,"effect":f"deals {i.mental_block*i.mental_block*2} damage for each hostile action taken"},
+            "bleeding" : {"value":i.bleeding,"effect":f"deals {i.bleeding}d6 damage at the begining of every turn and for every 10ft moved"},
+            "penance" : {"value":i.penance,"effect":f"deals{i.penance*i.penance}d4 damage at the begining of each turn"}
         }
     with open("party.json","w") as party_json:
         party_json.write(json.dumps(party))
@@ -110,7 +110,7 @@ while True:
             print("7. Disoriented - duration 1d6 rounds; random movement")
             print("8. Impaired - stacking; lose one kind of action, one attack or one spell level")
             print("9. Bleeding - stacking; 1d6 bleed per level of bleed on begining of turn and 10ft move")
-            print("10. Penance - stacking; 2 x number of instances of penance each turn")
+            print("10. Penance - stacking; number of instances for each instance d4 of penance each turn")
             choice = int(input("1-10: "))
             number = int(input("Amount: "))
             if choice == 1:
