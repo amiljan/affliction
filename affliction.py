@@ -48,7 +48,7 @@ def generate_json(characters):
             "rot" : {"value":i.rot,"effect":f"deals {i.rot*i.rot} damage at the begining of each turn"},
             "mental_block" : {"value":i.mental_block,"effect":f"deals {i.mental_block*i.mental_block*2} damage for each hostile action taken"},
             "bleeding" : {"value":i.bleeding,"effect":f"deals {i.bleeding}d6 damage at the begining of every turn and for every 10ft moved"},
-            "penance" : {"value":i.penance,"effect":f"deals{i.penance*i.penance}d4 damage at the begining of each turn"}
+            "penance" : {"value":i.penance,"effect":f"deals {i.penance*i.penance}d4 damage at the begining of each turn"}
         }
     with open("party.json","w") as party_json:
         party_json.write(json.dumps(party))
