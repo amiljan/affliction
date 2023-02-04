@@ -16,12 +16,12 @@ class Character():
         self.bleeding = 0
         self.penance = 0
 
-with open("party.json","r") as party_json:
+with open("/home/amiljan@reversinglabs.lan/bin/affliction/party.json","r") as party_json:
     party = json.load(party_json)
 
 def git_push():  
 
-    PATH_OF_GIT_REPO = r'C:\Users\andro\OneDrive\Desktop\Python\affliction\.git'  # make sure .git folder is properly configured
+    PATH_OF_GIT_REPO = r'/home/amiljan@reversinglabs.lan/bin/affliction/.git/'  # make sure .git folder is properly configured
     COMMIT_MESSAGE = 'comment from python script'
 
     def git_push():
